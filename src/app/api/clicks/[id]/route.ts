@@ -1,0 +1,16 @@
+import { NextResponse } from "next/server";
+import { getClicksCollection } from "@/lib/mongodb";
+
+export async function POST(
+  _req: Request,
+  { params }: { params: { id: string } },
+) {
+  const collection = await getClicksCollection();
+  const result = await collection.findOneAndUpdate(
+    { _id: params.id },
+    { $inc: { count: 1 } },
+    { upsert: true, returnDocument: "after" },
+  );
+
+  return NextResponse.json({ id: params.id, count: result?.count ?? 1 });
+}
