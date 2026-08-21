@@ -18,9 +18,15 @@ export default function LinkList({ links }: { links: LinkItem[] }) {
       .catch(() => {});
   }, []);
 
-  const handleClick = (id: string) => {
+  const handleClick = async (id: string) => {
     setCounts((prev) => ({ ...prev, [id]: (prev[id] ?? 0) + 1 }));
-    fetch(`/api/clicks/${id}`, { method: "POST" }).catch(() => {});
+    try {
+      const res = await fetch(`/api/clicks/${id}`, { method: "POST" });
+      const data: { count: number } = await res.json();
+      setCounts((prev) => ({ ...prev, [id]: data.count }));
+    } catch {
+      setCounts((prev) => ({ ...prev, [id]: Math.max((prev[id] ?? 1) - 1, 0) }));
+    }
   };
 
   return (
