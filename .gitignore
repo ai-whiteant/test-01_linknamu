@@ -28,6 +28,10 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# credential dumps (recreated by cloud sync, must never be committed)
+*몽고db*.txt
+atlas-credentials.env
+
 # vercel
 .vercel
 
